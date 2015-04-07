@@ -1,0 +1,41 @@
+<html>
+<head><title>FurAffinity Notifier Options</title></head>
+<script src="options.js"></script>
+<body>
+Update interval:
+<select id="update">
+	<option value="60000">1 minute</option>
+	<option value="300000">5 minutes</option>
+	<option value="600000">10 minutes</option>
+	<option value="900000">15 minutes</option>
+	<option value="1800000">30 minutes</option>
+	<option value="2700000">45 minutes</option>
+	<option value="3600000">1 hour</option>
+</select>
+<br><br>
+Highlighted keywords and users (comma-separated) <br>
+<textarea id="keywords" rows="1">
+</textarea>
+
+
+<br><br>
+Monitor new:<br>
+<input id="w0" type="checkbox">Submissions<br>
+<input id="w2" type="checkbox">Journals <br>
+<input id="w3" type="checkbox">Favorites<br>
+<input id="w1" type="checkbox" checked="true">Comments<br>
+<input id="w4" type="checkbox" checked="true">Watchers<br>
+<input id="w5" type="checkbox" checked="true">Notes<br>
+<input id="w6" type="checkbox" checked="true">Trouble Tickets<br>
+<br><br>
+
+Local options: <br>
+<input id="HTML_on" type="checkbox" checked="true">Enable HTML Layout Modifications<br>
+<input id="keep_ads" type="checkbox" checked="false">Layout modifications keep ads<br>
+<input id="notifications_on" type="checkbox">Enable Notifications<br>
+<br><br>
+
+<button id="save">Save</button>
+<span id="status"></span>
+</body>
+</html>

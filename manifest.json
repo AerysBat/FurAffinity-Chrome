@@ -1,0 +1,26 @@
+{
+  "name": "Furaffinity Notifier - Bat Mode",
+  "version": "2.1.0",
+  "manifest_version": 2,
+  "author": "Aerys Bat",
+  "description": "Displays the number of Furaffinity messages the user has.",
+  "icons": { "48": "Icon.png" },
+  "browser_action": {
+	  "default_title": "Furaffinity Notifier",
+	  "default_icon": "icon.png",
+	  "default_popup": "popover.html"
+  },
+  "background": { "page": "global.html" },
+  "content_scripts": [ {
+	  "matches": [ "http://www.furaffinity.net/*",
+                     "https://www.furaffinity.net/*",
+                     "http://beta.furaffinity.net/*",
+                     "https://beta.furaffinity.net/*" ],
+	  "js": [ "jquery.js", "parseData.js", "script.js", "URI.min.js"]
+  } ],
+  "options_page": "options.html",
+  "permissions": [ "http://www.furaffinity.net/",
+                   "http://sfw.furaffinity.net/",
+                   "storage",
+                   "notifications"]
+}

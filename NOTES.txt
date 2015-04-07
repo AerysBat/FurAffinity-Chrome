@@ -1,0 +1,56 @@
+To add local storage:
+https://developer.chrome.com/extensions/storage
+
+
+To "test" the extension in the Developer Kit, use
+location.reload(true)
+
+To get contents of msgCount
+chrome.storage.sync.get("msgCount", function(item) {console.log(item["msgCount"]);})
+
+Descriptions of files:P
+'manifest.json' - extension manifest
+'script.js' - code inserted into all pages in FA domain.
+'fa.png' - extension icon.
+'jquery-1.7.2.min.js' - JQuery source code.
+'global.html', 'global.js' - primary interval check code.
+'popover.html', 'popover.js' - page displayed on left click
+'options.html', 'options.js' - page displayed on right click + "options"
+
+
+
+
+
+
+---Changes---=
+
+1. Changed version from 2.0.3 to 2.1.0 and removed the line: 
+"update_url": "http://www.sunookitsune.net/chrome/furaffinitynotifier.xml"
+
+
+
+Note that the file furaffinitynotifier.xml looks like:
+<gupdate xmlns="http://www.google.com/update2/response" protocol="2.0">
+<app appid="jfngmhoggpfcgojmlebodpccdclnmhai">
+<updatecheck codebase="http://www.sunookitsune.net/chrome/furaffinitynotifier.crx" version="2.0.3"/>
+</app>
+</gupdate>
+
+
+2. Updated the extension to count only comments, notes, and new watches when executing the timed update. 
+
+
+
+4. Replaced the script.js with a version from "FA Statusbar"
+"content_scripts": [ {
+		"matches": [ "http://www.furaffinity.net/*", "https://www.furaffinity.net/*", "http://beta.furaffinity.net/*", "https://beta.furaffinity.net/*" ],
+		"js": [ "jquery-1.7.2.min.js", "script.js" ]
+	} ],
+
+5. Removed homepage. "homepage_url": "http://www.furaffinity.net/user/aerys",
+	
+6. Replaced mentions of jquery-1.7.2.min.js with jquery.js, and downloaded jquery-2.1.3.js as jquery.js
+
+7. Replaced default site to check "sfw.furaffinity.net"
+
+8. TOTAL REVAMP AND CHANGED EVERYTHING
