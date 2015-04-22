@@ -24,7 +24,7 @@ $.ajax({
         function(response) {
           //console.log('[popover] Received msgCount Reply ');
           var cssClass;
-          if (response.msgCount[7] == 0) {cssClass = 'class="none"';}
+          if (response.msgCount[7] === 0) {cssClass = 'class="none"';}
           $('#data').append('<a id="keywords' + '" ' + cssClass + ' href="#">' + response.msgCount[7] + " New Keywords" + '</a><br>');
 	        $('#keywords').click('http://www.furaffinity.net/msg/others/' + $(this).attr('href'), openUrl);
       });
@@ -34,6 +34,6 @@ $.ajax({
 	    $('#data').html('<a id="login" href="#">Click here</a> to log in to your FurAffinity account.');
 	    $('#login').click('http://sfw.furaffinity.net/login/', openUrl);
 	    chrome.runtime.sendMessage( {message: "setCount", count: ""} );
-    };
+    }
   }
 }).fail(function() {console.log('[popover.js] Fetch error');});

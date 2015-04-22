@@ -16,7 +16,7 @@
                      "https://www.furaffinity.net/*",
                      "http://beta.furaffinity.net/*",
                      "https://beta.furaffinity.net/*" ],
-	  "js": [ "jquery.js", "parseData.js", "script.js", "URI.min.js"]
+	  "js": [ "jquery-2.1.3.min.js", "parseData.js", "DOMReady.js", "script.js"]
   } ],
   "options_page": "options.html",
   "permissions": [ "http://www.furaffinity.net/",

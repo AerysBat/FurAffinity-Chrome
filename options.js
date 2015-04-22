@@ -4,8 +4,8 @@ function DEBUG(str) { if (dbg) { console.log(str); } }
 
 var DEFAULT_UPDATE = 30 * 1000;
 var watchOptions = [false, true, false, false, true, true, true]; //Needs an extra "true" for the rest of the code
-var update = DEFAULT_UPDATE
-var tagList = new Array();
+var update = DEFAULT_UPDATE;
+var tagList = [];
 var notifications_on = true;
 var HTML_on = true;
 var keep_ads = false;
@@ -15,14 +15,14 @@ localvars = ['HTML_on', 'keep_ads', 'notifications_on'];
 var OPTIONS = {
 
   save: function() {
-    DEBUG('Saving options.')
+    DEBUG('Saving options.');
     var select = document.getElementById("update");
     var update = select.children[select.selectedIndex].value;
 
     tagList = document.getElementById("keywords").value.split(',');
     tagList = tagList.map(function(T) {return T.trim().toLowerCase();});
     watchOptions.forEach(function(v, ind, Arr) {Arr[ind] = document.getElementById("w" + ind.toString()).checked;});
-    localvars.forEach(function(v, ind, Arr) {window[v] = document.getElementById(v).checked});
+    localvars.forEach(function(v, ind, Arr) {window[v] = document.getElementById(v).checked;});
 
     //Save current options and send message to extension
     OPTIONS.store(function () {
@@ -37,13 +37,12 @@ var OPTIONS = {
 
 
   init: function() {
-    DEBUG('Initializing page.')
+    DEBUG('Initializing page.');
     var save = document.getElementById("save");
     save.onclick = OPTIONS.save;
 
     //Load previously saved options and set input areas to previous values
     OPTIONS.load(function () {
-
       children = document.getElementById("update").children;
       for (i = 0; i < children.length; i++) {
       	  if (children[i].value == update) {children[i].selected = "true";}
@@ -62,6 +61,7 @@ var OPTIONS = {
       });
     });
   },
+
 
   load: function(callback) {
     chrome.storage.sync.get(["update", 'watchOptions', 'tagList'], function(items) {

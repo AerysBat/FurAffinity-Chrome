@@ -4,7 +4,7 @@ var buttonurl = '';
 var msgsSeen = 0;  //Last messages viewed, badge count
 var keywordAuthors = []; //array of users who have posted a journal w/ keyword
 
-var cparser = /^(?:From )?([^ ,]*)[ ,]/;
+var cparser = /^(?:From )?([^ ,]*)[ ,]( posted|[^,]*,) on (.*)$/; //Handles shouts and comments
 var wparser = /^([^ ]*) /;
 var jparser = /posted by ([^ ]*) on/;
 var commentAuthors = []; //array of users who have posted comments
@@ -19,11 +19,10 @@ chrome.runtime.onMessage.addListener(
         switch (request.message) {
 
         case 'pageData':
-            DEBUG('[onMessage] pageData request received');
+            DEBUG('[onMessage] pageData from page view source received');
             msgsSeen = -1;
             updateData(request.data, true);
             return true;
-            break;
 
 	      case 'getCount':
             DEBUG('[onMessage] getCount request received');
@@ -31,38 +30,33 @@ chrome.runtime.onMessage.addListener(
               sendResponse({msgCount: items['msgCount']});
             });
             return true;
-            break;
 
   	      case 'getTags':
             DEBUG('[onMessage] getTags request received');
             sendResponse({tagList: tagList});
             return true;
-            break;
 
         case "settingChanged":
             DEBUG('[onMessage] settingChanged request received');
 	          clearInterval(updater);
 	          init();
 	          return true;
-	          break;
 
         default:
 	          console.log('Received unknown message function: ' + request.message);
         }
-
-
     });
 
 
 
 //When the message count changes update the badge and decide whether to show a notification
 function onStorageChangedHandler(changes, areaName) {
-  if (!(changes['msgCount'] === undefined)) {
+  if (changes['msgCount'] !== undefined) {
       var lastMsgCount = changes['msgCount'].oldValue;
       var msgCount = changes['msgCount'].newValue;
       if (lastMsgCount === undefined) {lastMsgCount = Array.apply(null, new Array(zeroMsgs.length)).map(Number.prototype.valueOf,0);}
 
-      DEBUG("[onStorageChanged] old message count: " + lastMsgCount.toString() + " new message count: " + msgCount.toString())
+      DEBUG("[onStorageChanged] old message count: " + lastMsgCount.toString() + " new message count: " + msgCount.toString());
 
       //Format a pretty notification
       var message = "";
@@ -94,7 +88,7 @@ chrome.notifications.onClicked.addListener(
     function(notificationID) {
         chrome.windows.getAll(
         function(Windows) {
-          if (Windows.length == 0) {
+          if (Windows.length === 0) {
             chrome.windows.create(function(w) {chrome.tabs.create({url: buttonurl});});}
           else {
               chrome.tabs.create({url: buttonurl}, function (T) {
@@ -115,7 +109,8 @@ function parseData(data) {
   dom = $(data);
 
   // Look in header table for message list
-  var notifText = dom.find('.header_bkg li.noblock').text();
+  //var notifText = dom.find('.header_bkg li.noblock').text();
+  var notifText = dom.find('#messagebar').text();   
   notifText = notifText.replace(/\s/g, '');
   var hasNotifs = false;
   if (notifText !== undefined) {
@@ -132,8 +127,8 @@ function parseData(data) {
 
 
   msgCount[7] = -1;
-  if (msgCount[2] == 0) { msgCount[7] = 0; keywordAuthors = [];}
-  if (msgCount[1] == 0) {commentAuthors = [];}
+  if (msgCount[2] === 0) { msgCount[7] = 0; keywordAuthors = [];}
+  if (msgCount[1] === 0) {commentAuthors = [];}
 
 
   //If we're on the User Control Panel page pull out relevent info
@@ -152,19 +147,30 @@ function parseData(data) {
               authors_obs.push(jdata[1]);
             }
           });
-      if (j_links.size() == 0) { DEBUG('[parseData] No links on this page.'); }
+      if (j_links.size() === 0) { DEBUG('[parseData] No links on this page.'); }
       else  {msgCount[7] = keywordmatch; keywordAuthors = authors_obs;}
     }
 
     //Pull names of commenters
+    var c_links; 
     if (msgCount[1] > 0) {
       authors_obs = [];
-      var c_links = dom.find('#messages-shouts li, #messages-comments-submission li, #messages-comments-journal li').each(function(index, listItem) {
+      c_links = dom.find('#messages-shouts li, #messages-comments-submission li, #messages-comments-journal li').each(function(index, listItem) {
           var cdata = cparser.exec($(this).text());
-          if (cdata !== null) {authors_obs.push(cdata[1]);}
+          if (cdata !== null) {
+            var d = cdata[3].replace(',','').split(/[,? |:]/); // Pick apart date
+            d[1] = d[1].slice(0, -2);
+            d[3] = Number(d[3]);
+            if (d.pop() == "PM") {d[3] = d[3]+12;}
+            d = Date.parse(d.slice(0, 3).join(' '))/1000 + d[3]*3600+Number(d[4])*60; 
+            authors_obs.push({name: cdata[1], date: d});
+          }
       });
-      if (c_links.size() == 0) {DEBUG('[parseData] could not find comments on this page.') }
-      else {commentAuthors = authors_obs;};
+      if (c_links.size() === 0) {DEBUG('[parseData] could not find comments on this page.'); }
+      else {
+        authors_obs.sort(function(a,b) {return b['date'] - a['date'];});
+        commentAuthors = authors_obs.map(function(c){return c['name'];});
+      }
     }
 
 
@@ -175,18 +181,18 @@ function parseData(data) {
           var wdata = wparser.exec($(this).text());
           if (wdata !== null) {authors_obs.push(wdata[1]);}
       });
-      if (c_links.size() == 0) {DEBUG('[parseData] could not find watchers on this page.') }
-      else {newWatchers = authors_obs;};
+      if (c_links.size() === 0) {DEBUG('[parseData] could not find watchers on this page.');}
+      else {newWatchers = authors_obs;}
     }
   }
 
   if (hasNotifs | REMsg.test(dom)) { updateNewMessages(msgCount); }
-  else { DEBUG("[parseData] No submission data found.") }
+  else { DEBUG("[parseData] No submission data found."); }
 }
 
 //Compare current message count with last observed count
 function updateNewMessages(msgCount) {
-  DEBUG('[updateNewMessages] Found messages: ' + msgCount.toString())
+  DEBUG('[updateNewMessages] Found messages: ' + msgCount.toString());
 
   if (Array.isArray(msgCount) & msgCount.length == zeroMsgs.length) {
     chrome.storage.sync.get(["msgCount"], function(items) {
@@ -196,13 +202,14 @@ function updateNewMessages(msgCount) {
 
       //Update badge
       var count = 0;
+      var badgenum; 
       for (var i = 0; i < msgCount.length; i++) {count = count + msgCount[i]*watchOptions[i];}
 
       //Set badge to red for new messages
       if (isNaN(msgsSeen)) { msgsSeen = -1; DEBUG('[updateNewMessages] msgsSeen was NaN.');}
       if (msgsSeen == -1) { msgsSeen = count; }
-      if (msgsSeen < count) { chrome.browserAction.setBadgeBackgroundColor({color: [255, 0, 0, 255]}); var badgenum = count - msgsSeen; }
-      else {chrome.browserAction.setBadgeBackgroundColor({color: [128, 128, 128, 255]}); var badgenum = count; }
+      if (msgsSeen < count) { chrome.browserAction.setBadgeBackgroundColor({color: [255, 0, 0, 255]}); badgenum = count - msgsSeen; }
+      else {chrome.browserAction.setBadgeBackgroundColor({color: [128, 128, 128, 255]}); badgenum = 0; }
 
       if (badgenum > 0) {
         chrome.browserAction.setBadgeText( {"text": badgenum.toString()});
@@ -210,7 +217,7 @@ function updateNewMessages(msgCount) {
       }
       else {
         chrome.browserAction.setBadgeText( {"text": ""} );
-        DEBUG('[updateNewMessages] Cleared badge.')
+        DEBUG('[updateNewMessages] Cleared badge.');
       }
     });
   }
@@ -228,7 +235,7 @@ function newMsgNotification(message, pullNote) {
         url: 'http://www.furaffinity.net/msg/pms/',
 	      success: function (data) {
           var val = $(data).find('a.note-unread.unread').first().attr('href');
-	        if (val != '') { buttonurl = "http://www.furaffinity.net" + val; }
+	        if (val !== '') { buttonurl = "http://www.furaffinity.net" + val; }
         }
       }).fail(function () { DEBUG('[newMsgNotification] AJAX request failed'); });
     }
