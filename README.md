@@ -2,11 +2,10 @@
 
 Installation:  
 
-1. Clone the repo or download ZIP and and extract it.  
-2. Follow these instructions for adding unpacked Chrome extensions. https://developer.chrome.com/extensions/getstarted
-  * Enter chrome://extensions in your address bar. 
-  * Make sure the "Developer Mode" checkbox is checked. 
-  * Click "Load Unpacked Extension" and point it to the folder you extracted the files. 
+1. Clone the repo or download and extract ZIP. 
+2. Enter chrome://extensions in your address bar. 
+3. Make sure the "Developer Mode" checkbox is checked. 
+4. Click "Load Unpacked Extension" and point it to the folder you extracted the files. 
 
 
 
