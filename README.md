@@ -1,16 +1,16 @@
 # FurAffinity-Chrome
 
 
-*A remedial Chrome Extension for FA.*
+*A remedial Chrome extension for FA.*
 
 Features: 
 
-1. Keyword watch list. Watch for journals containing the word "commission!"
+1. Keyword watch list. Watch for journals containing the word "commission."
 2. Unread message count.
-3. Desktop toast notifications.
-4. Infinite scroll in new submission view.
+3. Optional toast notifications.
+4. Infinite scroll when viewing new submissions.  
 5. Many HTML fixes - remove the banner, hide user stats, etc.
-6. Lots of customization.
+6. Lots of customization!
 
 
 Installation:  
