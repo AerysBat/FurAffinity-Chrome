@@ -6,12 +6,78 @@ keep_ads = false;
 subparser = /^([^<]*)<[^:]*:<\/b>([^<]*)<[^:]*:<\/b>([^<]*)/;
 var router; 
 
-//<b>Favorites:</b>
-//53 <br/>
-//&nbsp;&nbsp;&nbsp;&nbsp; <b>Comments:</b> 24<br/>
-//&nbsp;&nbsp;&nbsp;&nbsp; <b>Views:</b> 240<br/>
 
-
+var styletxt = " \
+  #floating_nav {    \
+    position: fixed; \
+    left: 0px; z-index: 1; \
+    align-content: flex-right; \
+    background-color: #202225; \
+    padding-bottom: 3px; \
+    padding-left: 3px; \
+    padding-right: 1em; \
+    width: 100%;} \
+  .body { \
+    font-size: 11px; }\
+  .button { \
+  font-size: 15px; \
+    line-height: 25px;} \
+  li.section-controls { \
+    margin-top: 0px; } \
+  .remove-nuke {\
+    background-color: #FFAFAF;\
+    font-weight: bold;}\
+  .more.button {\
+    float:none;\
+    font-weight: normal; \
+    padding: 1px 6px; \
+    color: #41526b; \
+    display: inline; }\
+  li#sfw-toggle-enhanced.active {   \
+    background-color: #090;}\
+  .navigation { \
+    float: right; \
+    padding-right: 10px;} \
+  .a_note_div { \
+    float: left; \
+    height: 100%; \
+    display: table; \
+    padding-right: 10px;} \
+  .input_note_div { \
+    float: left; } \
+  .t-image { \
+    height: 300px; } \
+  .in { \
+    display: flex; \
+    justify-content: center; } \
+  div#sitebanner { \
+    display: none; } \
+  .ads { \
+    display: inline; } \
+  ul.message-stream { \
+    margin: 0px 0px 0px 0px; } \
+  center.flow.with-checkboxes-titles-usernames b, center.flow.with-checkboxes-titles-usernames b {  \
+    height: 300px;} \
+  #ad-2, #ad-4 { \
+    display: inline; \
+    padding-left: 10px; \
+    padding-right: 10px; \
+    margin: 0px 0px 0px 0px;} \
+  #mainnav { \
+    top: -46px; } \
+  #mainnav li {\
+    padding: 9px 10px 0px 10px;\
+  }\
+  #furaffinity { \
+    overflow: initial; \
+    margin-top: 82px;} \
+  #nav { \
+    top: 0px; \
+  } \
+  ";
+  
+  styletxt2 =  " \
+  "; 
 
 
 var EDIT = { 
@@ -27,65 +93,7 @@ var EDIT = {
     //};
   }, 
   
-  stylesheet_addn: function() { 
-  var styletxt = "#floating_nav {    \
-    position: fixed; \
-    left: 0px; z-index: 1; \
-    align-content: flex-right; \
-    background-color: #202225; \
-    padding-bottom: 3px; \
-    padding-left: 3px; \
-    padding-right: 1em; \
-    width: 100%;} \
-    .body { \
-      font-size: 11px; }\
-    .button { \
-    font-size: 15px; \
-      line-height: 25px;} \
-    li.section-controls { \
-      margin-top: 0px; } \
-    .remove-nuke {\
-      background-color: #FFAFAF;\
-      font-weight: bold;}\
-    .more.button {\
-      float:none;\
-      font-weight: normal; \
-      padding: 1px 6px; \
-      color: #41526b; \
-      display: inline; }\
-    li#sfw-toggle-enhanced.active {   \
-      background-color: #090;}\
-    .navigation { \
-      float: right; \
-      padding-right: 10px;} \
-    .a_note_div { \
-      float: left; \
-      height: 100%; \
-      display: table; \
-      padding-right: 10px;} \
-    .input_note_div { \
-      float: left; } \
-    .t-image { \
-      height: 300px; } \
-    .in { \
-      display: flex; \
-      justify-content: center; } \
-    div#sitebanner { \
-      display: none; } \
-    .ads { \
-      display: inline; } \
-    ul.message-stream { \
-      margin: 0px 0px 0px 0px; } \
-    center.flow.with-checkboxes-titles-usernames b, center.flow.with-checkboxes-titles-usernames b {  \
-      height: 300px;} \
-    #ad-2, #ad-4 { \
-      display: inline; \
-      padding-left: 10px; \
-      padding-right: 10px; \
-      margin: 0px 0px 0px 0px; }";
-  return styletxt; 
-    
-  },
+  
 
   view_enhance: function() {
     // Enhancements for a submission page.
@@ -388,10 +396,10 @@ var EDIT = {
         
                         
         // Add a button "select non-highlighted"
-        buttons = journallist.last();
-        buttons.children().eq(2).after('<input class="button mark-unimportant" type="button" value="Select non-highlighted" style="margin:0 0 4px 4px">');
-        buttons.children().eq(3).click(function(evt) {
-          $(this.parentElement.parentElement).find('li:not(.important) input[type=checkbox]').attr('checked',true);
+        buttons = $('.section-controls').last();
+        c = buttons.children().eq(2).after('<input class="button mark-unimportant" type="button" value="Select non-highlighted" style="margin:0 0 0 4px">');
+        buttons.children().eq(3).click(function (evt) {
+          $('#messages-journals .message-stream').find('li:not(.important) input[type=checkbox]').attr('checked',true);
         });
         
 
@@ -403,42 +411,43 @@ var EDIT = {
     $('#furaffinity :nth-child(2) .bg3 .content').remove();
   },
   
+
+  
   runtmscript: function() {
       // We know where we are, dammit.
       DEBUG("Running runtmscript"); 
       headerAds = $('.in');
       headerAds.remove(); 
       footerAds = $('.footer .ads');
-      //$(".block-banners").remove();
       $('.footer').remove();
+      $('.sitebanner').remove();
   
-  
+      // Without the header/footer scripts, this variable is never initialized.
+      // TODO: improve this.
       if (keep_ads) {
         var mt = $('.content');
         headerAds.insertAfter(mt);
         footerAds.insertAfter(mt);
         footerAds.wrap('<div style="display: flex; justify-content: center; padding-bottom: 20px;" />');
-      } else { 
-      }
-      // Without the header/footer scripts, this variable is never initialized.
-      // TODO: Make ads toggleable.
-      //unsafeWindow.OA_output = false;
+      } 
+      
+      //HTML edits depend on which page we're viewing
       var path = document.URL;
       DEBUG("path = " + path);
       for (var route in router) {
           if (!router.hasOwnProperty(route)) {
               continue;
           }
-          //var re = RegExp(route);
-          //if (re.test(path)) {
           if (path.indexOf(route) >= 0) {
             DEBUG("matched " + route);
             router[route]();
           }
       }
+      
       // Fix SFW button
       var toggler = $('#sfw-toggle a');
       toggler.parent().attr('id', 'sfw-toggle-enhanced');
+
       // Reload to get new parent.
       toggler = $('#sfw-toggle-enhanced a');
       toggler.click(function (event) {
@@ -458,10 +467,17 @@ var EDIT = {
   main: function () { 
         //console.log(HTML_on);
         
-        console.log("Running modifications");
+        DEBUG("Running modifications");
         if (HTML_on) {
-          document.getElementById("sitebanner").remove(); 
-          EDIT.addGlobalStyle(EDIT.stylesheet_addn());
+          document.getElementById("header").remove(); 
+          document.getElementById('ad-2').remove();
+          document.getElementById('ad-4').remove();
+          document.getElementById('ad-extra-flat').remove();
+        
+          //Change CSS stylesheet
+          EDIT.addGlobalStyle(styletxt);
+          
+          //Run HTML edits
           EDIT.runtmscript();
         }
       chrome.extension.sendMessage({message: 'pageData',data: document.documentElement.outerHTML});
@@ -469,10 +485,9 @@ var EDIT = {
 };
 
 
+  //Route each page to the correct tweak function
+router = {'/msg/submissions': EDIT.subs_enhance, '/msg/pms': function() {}, '/msg/others': EDIT.highlightTags, '/user/': EDIT.removeStats};
 
-//Supports arbitrary enhancement function per page
-//var router = {'^/view/': view_enhance, '^/msg/submissions': subs_enhance};
-router = {'/msg/submissions': EDIT.subs_enhance, '/msg/pms': function() {}, '/msg/others': EDIT.highlightTags, '/user/': EDIT.removeStats}; 
 
 
 //Run the GM script plus the
