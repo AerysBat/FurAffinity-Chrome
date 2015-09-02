@@ -109,8 +109,8 @@ function parseData(data) {
   dom = $(data);
 
   // Look in header table for message list
-  //var notifText = dom.find('.header_bkg li.noblock').text();
-  var notifText = dom.find('#messagebar').text();   
+  var notifText = dom.find('.header_bkg li.noblock').text(); //Classic UI
+  //var notifText = dom.find('#messagebar').text();   //Beta UI
   notifText = notifText.replace(/\s/g, '');
   var hasNotifs = false;
   if (notifText !== undefined) {
