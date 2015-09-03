@@ -168,7 +168,7 @@ var EDIT = {
           document_height = $(document).height();
           if(window_bottom > document_height - 50) {
               if (EDIT.scroll_triggered) {
-                DEBUG('Load in progress. Not loading more.') 
+                DEBUG('Load in progress. Not loading more.');
                 return;
               }  // Already running. Don't spam the server.
               if (!auto_load){ return; }
@@ -225,8 +225,9 @@ var EDIT = {
   
     function move_nav() {
         //menuheight = $('.block-menu-top').innerHeight();
-        menuheight = $('#messagebar'); 
-        menuheight = menuheight.outerHeight() + menuheight.offset()['top'];
+        menuheight = $('#messagebar');
+        // TODO: Broken
+        // menuheight = menuheight.outerHeight() + menuheight.offset()['top'];
         scrolltop = $(window).scrollTop();
         if(scrolltop>menuheight) {$('#floating_nav').css('top', 0);}
         else {$('#floating_nav').css('top', menuheight - scrolltop);}
@@ -469,10 +470,11 @@ var EDIT = {
         
         DEBUG("Running modifications");
         if (HTML_on) {
-          document.getElementById("header").remove(); 
-          document.getElementById('ad-2').remove();
-          document.getElementById('ad-4').remove();
-          document.getElementById('ad-extra-flat').remove();
+          // TODO: Broken
+          // document.getElementById("header").remove(); 
+          // document.getElementById('ad-2').remove();
+          // document.getElementById('ad-4').remove();
+          // document.getElementById('ad-extra-flat').remove();
         
           //Change CSS stylesheet
           EDIT.addGlobalStyle(styletxt);
