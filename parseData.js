@@ -28,15 +28,17 @@ var msgCount = zeroMsgs.slice(0);
 var lastMsgCount = zeroMsgs.slice(0);  // Messages on last check of any sort
 var tagList  = [];
 var userList = [];
+var UIBeta   = true;
 
 var localVars = ['HTML_on', 'keep_ads', 'notifications_on'];
-var syncVars  = ['updateInterval', 'watchOptions', 'tagList', 'msgCount'];
+var syncVars  = ['updateInterval', 'watchOptions', 'tagList', 'msgCount', 'UIBeta'];
 
 
 
 
 //Regular expression to parse strings of the form "55S, 1C, 22J, 9F, 2W, 2N, 1TT"
-var REParser = /(\d+S)?(?:,)*(\d+C)?(?:,)*(\d+J)?(?:,)*(\d+F)?(?:,)*(\d+W)?(?:,)*(\d+N)?(?:,)*(\d+TT)?/;
+var REParser = /(\d+S)?(?:\s,)*(\d+C)?(?:\s,)*(\d+J)?(?:\s,)*(\d+F)?(?:\s,)*(\d+W)?(?:\s,)*(\d+N)?(?:\s,)*(\d+TT)?/;
+// REParser     = /(\d+)?(?:\sS,)*/;
 var REMsg = /No Messages/;
 
 // Regular expression to parse journal items. Not working.
@@ -84,6 +86,7 @@ function processOptions(opts)
     {
         updateInterval   = opts['updateInterval'];
         watchOptions     = opts['watchOptions'];
+        UIBeta           = opts['UIBeta'];
         tagList          = opts['tagList'];
         HTML_on          = opts['HTML_on'];
         keep_ads         = opts['keep_ads'];

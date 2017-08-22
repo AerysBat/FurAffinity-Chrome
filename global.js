@@ -159,9 +159,16 @@ function parseData(pageHTML)
     dom = $(pageHTML);
 
     // Look in header table for message list
-    var notifText = dom.find('.header_bkg li.noblock').text(); //Classic UI
-    //var notifText = dom.find('#messagebar').text();   //Beta UI
-    notifText = notifText.replace(/\s/g, '');
+    var notifText;
+    if (UIBeta) {
+        notifText = dom.find('#ddmenu > ul > li:nth-child(8)').text();   //Beta UI
+        notifText = notifText.replace(/\s/g,'').replace("Messages:", '');
+    } else {
+        notifText = dom.find('.header_bkg li.noblock').text(); //Classic UI
+        notifText = notifText.replace(/\s/g, '');
+    }
+
+    DEBUG("Notifications:" + notifText);
     var hasNotifs = false;
     if (notifText !== undefined) {
         var notifData = REParser.exec(notifText);

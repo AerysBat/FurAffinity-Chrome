@@ -6,6 +6,7 @@ var OPTIONS = {
 
         tagList = document.getElementById("keywords").value.split(',');
         tagList = tagList.map(function(T) {return T.trim().toLowerCase();});
+        UIBeta = document.getElementById("beta_ui").checked;
         watchOptions.forEach(function(v, ind, Arr) {Arr[ind] = document.getElementById("w" + ind.toString()).checked;});
         localVars.forEach(function(v, ind, Arr) {window[v] = document.getElementById(v).checked;});
 
@@ -23,7 +24,8 @@ var OPTIONS = {
     {
         chrome.storage.sync.set( { 'updateInterval': updateInterval,
                                    'tagList': tagList,
-                                   'watchOptions': watchOptions.concat(tagList.length > 0) //Tack item on
+                                   'watchOptions': watchOptions.concat(tagList.length > 0), //Tack item on
+                                   'UIBeta' : UIBeta
                                  },
                                  function() {OPTIONS.storeLocal(callback);});
     },
@@ -49,6 +51,7 @@ var OPTIONS = {
         watchOptions.pop(); // We save this with an extra item tacked on at the end
         watchOptions.forEach(function(v, ind, Arr) {document.getElementById("w" + ind.toString()).checked = v;});
         document.getElementById("keywords").value = tagList.join(", ");
+        document.getElementById("beta_ui").checked = UIBeta;
 
         // Local variables, easy!
         localVars.forEach(function(v, ind, Arr) {document.getElementById(v).checked = window[v];});
