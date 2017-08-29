@@ -102,19 +102,20 @@ function createNotification(msg)
 
 
 /// Pop up a new notification, either msg counts or entire note text
-function newMsgNotification(message, pullNote)
+function newMsgNotification(message, gotNote)
 {
     DEBUG("Creating notification message: " + message);
     buttonurl = "http://www.furaffinity.net/msg/others/";
-    // What's going on here exactly?
-    if (pullNote) {
-        $.ajax({
-            url: 'http://www.furaffinity.net/msg/pms/',
-            error:   function () { DEBUG('AJAX request failed'); },
-            success: function (data) { var val = $(data).find('a.note-unread.unread').first().attr('href');
-                                       if (val !== '') { buttonurl = "http://www.furaffinity.net" + val; }
-                                     }
-        });
+    if (gotNote) {
+        // (Not working) Get link to note in popup
+        // $.ajax({
+        //     url: 'http://www.furaffinity.net/msg/pms/',
+        //     error:   function () { DEBUG('AJAX request failed'); },
+        //     success: function (data) { var val = $(data).find('a.note-unread.unread').first().attr('href');
+        //                                if (val !== '') { buttonurl = "http://www.furaffinity.net" + val; }
+        //                              }
+        // });
+        buttonurl = "http://www.furaffinity.net/msg/pms/";
     }
     createNotification(message);
 }
