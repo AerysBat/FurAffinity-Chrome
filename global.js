@@ -126,7 +126,7 @@ function sendUpdateNotification(newHotness)
     var message = formatUpdateNotification(newHotness);
     var gotNewNote = newHotness[5] > 0;
 
-    if (message.length > 0) {
+    if (message.length > 0 && notifications_on) {
         newMsgNotification("New messages received. \r\n" + message, gotNewNote);
     }
 }
